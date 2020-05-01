@@ -1,6 +1,6 @@
 {
-  "name": "donallynch/laravel-template",
-  "description": "A Laravel quick start template with the core website features you'd expect in 2020!",
+  "name": "donallynch/battleground",
+  "description": "Project for DIGIT technical test",
   "keywords": ["framework", "laravel"],
   "license": "MIT",
   "type": "project",
