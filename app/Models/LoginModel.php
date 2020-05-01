@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Entities\Responder;
 use App\Repos\User;
-use App\Services\HashGenerator;
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
 use Throwable;
@@ -22,9 +21,6 @@ class LoginModel
 
     /** @var UsersModel $usersModel */
     private $usersModel;
-
-    /** @var HashGenerator $hashGenerator */
-    private $hashGenerator;
 
     /** @var Responder $responder */
     private $responder;
@@ -50,20 +46,17 @@ class LoginModel
      * LoginModel constructor.
      * @param User $usersRepo
      * @param UsersModel $usersModel
-     * @param HashGenerator $hashGenerator
      * @param Responder $responder
      * @param Agent $agent
      */
     public function __construct(
         User $usersRepo,
         UsersModel $usersModel,
-        HashGenerator $hashGenerator,
         Responder $responder,
         Agent $agent
     ){
         $this->usersRepo = $usersRepo;
         $this->usersModel = $usersModel;
-        $this->hashGenerator = $hashGenerator;
         $this->responder = $responder;
         $this->agent = $agent;
     }
