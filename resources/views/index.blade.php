@@ -7,8 +7,8 @@
 @section('content')
     <div class="row">
         <div id="gui" class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-            <div class="jumbotron">
-                <h1 class="display-4">{!! __('messages.battleground') !!}</h1>
+            <div class="jumbotron index-jumbo">
+                <h1 class="display-4 logo-name">{!! __('messages.battleground') !!}</h1>
                 <p class="lead">{!! __('messages.pick-your-battle') !!}</p>
                 <hr class="my-4">
                 <p>{!! __('messages.fight-to-the-death') !!}</p>

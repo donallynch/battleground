@@ -14,6 +14,15 @@
     font-weight: bold;
 }
 
+.index-jumbo {
+    color: white;
+    background-image: url('../images/viking.png');
+}
+
+.logo-name {
+    color: white;
+}
+
 .small-arrow {
     font-size: 10px;
 }
