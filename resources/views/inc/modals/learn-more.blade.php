@@ -15,8 +15,8 @@
                                 <div class="container">
                                     <h1 class="display-4">{!! __('messages.login') !!}</h1>
                                     <p class="lead">
-                                        {!! __('messages.learn-login') !!}
-                                        <img src="{!! asset('/images/login-screen.png') !!}" class="img-fluid" alt="Responsive image">
+                                        {!! __('messages.learn-login', ['url' => route('login')]) !!}
+                                        <img src="{!! asset('/images/login-screen.png') !!}" class="img-fluid" alt="{!! __('messages.photo') !!}">
                                     </p>
                                 </div>
                             </div>
@@ -24,8 +24,8 @@
                                 <div class="container">
                                     <h1 class="display-4">{!! __('messages.create-player') !!}</h1>
                                     <p class="lead">
-                                        {!! __('messages.learn-create-player') !!}
-                                        <img src="{!! asset('/images/create-player-screen.png') !!}" class="img-fluid" alt="Responsive image">
+                                        {!! __('messages.learn-create-player', ['url' => route('create-player')]) !!}
+                                        <img src="{!! asset('/images/create-player-screen.png') !!}" class="img-fluid" alt="{!! __('messages.photo') !!}">
                                     </p>
                                 </div>
                             </div>
@@ -33,8 +33,8 @@
                                 <div class="container">
                                     <h1 class="display-4">{!! __('messages.submit-battle') !!}</h1>
                                     <p class="lead">
-                                        {!! __('messages.learn-submit-battles') !!}
-                                        <img src="{!! asset('/images/submit-battle-screen.png') !!}" class="img-fluid" alt="Responsive image">
+                                        {!! __('messages.learn-submit-battles', ['url' => route('submit-battle')]) !!}
+                                        <img src="{!! asset('/images/submit-battle-screen.png') !!}" class="img-fluid" alt="{!! __('messages.photo') !!}">
                                     </p>
                                 </div>
                             </div>
@@ -42,8 +42,8 @@
                                 <div class="container">
                                     <h1 class="display-4">{!! __('messages.process-battles') !!}</h1>
                                     <p class="lead">
-                                        {!! __('messages.learn-process-battles') !!}
-                                        <img src="{!! asset('/images/process-battles-screen.png') !!}" class="img-fluid" alt="Responsive image">
+                                        {!! __('messages.learn-process-battles', ['url' => route('battles')]) !!}
+                                        <img src="{!! asset('/images/process-battles-screen.png') !!}" class="img-fluid" alt="{!! __('messages.photo') !!}">
                                     </p>
                                 </div>
                             </div>
@@ -51,8 +51,8 @@
                                 <div class="container">
                                     <h1 class="display-4">{!! __('messages.leaderboard') !!}</h1>
                                     <p class="lead">
-                                        {!! __('messages.learn-leaderboard') !!}
-                                        <img src="{!! asset('/images/leaderboard-screen.png') !!}" class="img-fluid" alt="Responsive image">
+                                        {!! __('messages.learn-leaderboard', ['url' => route('leaderboard')]) !!}
+                                        <img src="{!! asset('/images/leaderboard-screen.png') !!}" class="img-fluid" alt="{!! __('messages.photo') !!}">
                                     </p>
                                 </div>
                             </div>
