@@ -2,6 +2,22 @@
     color: #333333;
 }
 
+.lucky {
+    color: green;
+}
+
+.unlucky, .attack {
+    color: red;
+}
+
+.attack {
+    font-weight: bold;
+}
+
+.small-arrow {
+    font-size: 10px;
+}
+
 .form {
     border-left: 4px solid silver;
     padding-left: 20px;

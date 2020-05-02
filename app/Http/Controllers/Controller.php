@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UsersModel;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Psr\SimpleCache\InvalidArgumentException;
@@ -13,22 +12,6 @@ use Psr\SimpleCache\InvalidArgumentException;
  */
 class Controller extends BaseController
 {
-    /** @var UsersModel $usersModel */
-    private $usersModel;
-
-    /**
-     * Controller constructor.
-     * @param Request $request
-     * @param UsersModel $usersModel
-     * @throws InvalidArgumentException
-     */
-    public function __construct(
-        Request $request,
-        UsersModel $usersModel
-    ) {
-        $this->usersModel = $usersModel;
-    }
-
     /**
      * Exit application with 404 page
      */

@@ -9,10 +9,10 @@
 Route::get('/', 'IndexController@indexAction')
     ->name('index');
 
-Route::get('/login', 'Auth\LoginController@indexAction')
+Route::get('/login', 'LoginController@indexAction')
     ->name('login');
 
-Route::post('/login', 'Auth\LoginController@postAction')
+Route::post('/login', 'LoginController@postAction')
     ->name('login-post');
 
 Route::get('/battles', 'BattlesController@indexAction')

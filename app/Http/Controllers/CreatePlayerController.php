@@ -3,17 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreatePlayerPost;
-use App\Models\LoginModel;
-use App\Models\UsersModel;
-use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Psr\SimpleCache\InvalidArgumentException;
-use Throwable;
 
 /**
  * Class CreatePlayerController
@@ -30,26 +25,12 @@ class CreatePlayerController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
-
-    /** @var UsersModel $usersModel */
-    private $usersModel;
-
     /**
      * CreatePlayerController constructor.
-     * @param UsersModel $usersModel
-     * @param LoginModel $loginModel
      * @param Request $request
      * @throws InvalidArgumentException
      */
-    public function __construct(
-        UsersModel $usersModel,
-        LoginModel $loginModel,
-        Request $request
-    ) {
-        parent::__construct($request, $usersModel);
-        $this->loginModel = $loginModel;
-
+    public function __construct(Request $request) {
         /* Secure route */
         $session = $request->session()->get('user');
         if ($session === null) {

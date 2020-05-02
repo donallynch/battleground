@@ -12,6 +12,9 @@ class BattleService
     /** @var bool $battleComplete */
     private $battleComplete = false;
 
+    const PLAYING = 1;
+    const NOT_PLAYING = 2;
+
     /**
      * Fight Simulator
      * @param $battle
@@ -52,7 +55,7 @@ class BattleService
         DB::table('battles')
             ->where('id', $battle->id)
             ->update([
-                'is_complete'  => 1
+                'is_complete'  => 0
             ]);
 
         return $battleLog;
@@ -67,21 +70,23 @@ class BattleService
      */
     public function attack($userA, $userB, $entryCount)
     {
-        $status = 'Played';
-        $code = 1;
+        $status = __('messages.played');
+        $code = self::PLAYING;
 
         /* Is Opponent lucky */
-        $lucky = (int)$userB->luck_value;
+        $lucky = $userB->luck_value;
         $newLuckValue = rand(0, 1);
 
-        $healthDeduction = 0;
-        $attackStrength = (($userA->attack_value / 2));
+        $attackStrength = ($lucky) ? 0 : (($userA->attack_value / 2));
+        $healthDeduction = $attackStrength;
+        $opponentInitialHealth = $userB->hit_points;
         $opponentNewHealth = $userB->hit_points - $attackStrength;
+        $opponentInitialStrength = $userB->attack_value;
         $opponentNewStrength = $userB->attack_value - floor($attackStrength / 10);
         $opponentGold = $userB->gold;
 
-        /* 10% of Opponents Gold (if Opponent is NOT lucky) */
-        $winnings = floor($userB->gold / 100) * 10;
+        /* Between 10% and 20% of Opponents Gold (if Opponent is NOT unlucky) */
+        $winnings = ($lucky) ? 0 : (floor($userB->gold / 100) * 10) + rand(0, 10);
 
         /* Ensure Opponent has health */
         if ($opponentNewHealth < 0) {
@@ -91,8 +96,8 @@ class BattleService
             } else {
                 $opponentNewHealth = 0;
                 $this->battleComplete = true;
-                $status = "{$userB->name} doesn&apos;t have enough health to play! GAME OVER!";
-                $code = 2;
+                $status = __('messages.not-enough-health-to-play', ['name' => $userB->name]);
+                $code = self::NOT_PLAYING;
             }
         }
 
@@ -100,16 +105,16 @@ class BattleService
         if ($userA->hit_points === 0) {
             $opponentNewStrength = 0;
             $this->battleComplete = true;
-            $status = "{$userA->name} doesn&apos;t have enough strength to play! GAME OVER!";
-            $code = 3;
+            $status = __('messages.not-enough-strength-to-play', ['name' => $userA->name]);
+            $code = self::NOT_PLAYING;
         }
 
         /* Ensure Opponent has strength */
         if ($opponentNewStrength < 0) {
             $opponentNewStrength = 0;
             $this->battleComplete = true;
-            $status = "{$userB->name} doesn&apos;t have enough strength to play! GAME OVER!";
-            $code = 3;
+            $status = __('messages.not-enough-strength-to-play', ['name' => $userB->name]);
+            $code = self::NOT_PLAYING;
         }
 
         /**
@@ -120,8 +125,8 @@ class BattleService
         if ($opponentGold <= 0 || $userB->gold === 0) {
             $opponentGold = 0;
             $this->battleComplete = true;
-            $status = "{$userB->name} doesn&apos;t have enough gold to play! GAME OVER";
-            $code = 4;
+            $status = __('messages.not-enough-gold-to-play', ['name' => $userB->name]);
+            $code = self::NOT_PLAYING;
         }
 
         /* Prepare the battlelog */
@@ -138,8 +143,7 @@ class BattleService
             DB::table('users')
                 ->where('id', $userA->id)
                 ->update([
-                    'gold'          => $userA->gold + $winnings,
-                    'luck_value'    => $newLuckValue
+                    'gold'          => $userA->gold + $winnings
                 ]);
             DB::table('users')
                 ->where('id', $userB->id)
@@ -154,13 +158,17 @@ class BattleService
                 'entryCount' => $entryCount,
                 'player1' => $userA->name,
                 'player2' => $userB->name,
-                'isPlayerBLucky' => ($newLuckValue) ? 'Yes' : 'No',
+                'isPlayerBLucky' => $lucky,
                 'hitPoints' => $attackStrength,
+                'opponentInitialHealth' => $opponentInitialHealth,
                 'healthDeduction' => $healthDeduction,
                 'attackStrength' => $attackStrength,
+                'opponentInitialStrength' => $opponentInitialStrength,
                 'opponentNewStrength' => $opponentNewStrength,
+                'initialGold' => $opponentGold,
                 'winnings' => $winnings,
                 'status' => $status,
+                'code' => $code
             ]);
         }
 
