@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SubmitBattlePost;
 use App\Models\LoginModel;
 use App\Models\UsersModel;
 use App\Http\Controllers\Controller;
@@ -9,6 +10,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Psr\SimpleCache\InvalidArgumentException;
 use Throwable;
@@ -47,6 +49,12 @@ class SubmitBattleController extends Controller
     ) {
         parent::__construct($request, $usersModel);
         $this->loginModel = $loginModel;
+
+        /* Secure route */
+        $session = $request->session()->get('user');
+        if ($session === null) {
+            $this->show404();
+        }
     }
 
     /**
@@ -54,19 +62,37 @@ class SubmitBattleController extends Controller
      */
     public function indexAction()
     {
-        return view('submit-battle');
+        /* Retrieve all incomplete Battles from DB */
+        $users = DB::table('users')
+            ->get();
+
+        $usersData = [];
+        foreach ($users as $user) {
+            $usersData[$user->id] = $user->name;
+        }
+
+        return view('submit-battle', [
+            'players' => $usersData
+        ]);
     }
 
     /**
      * @param Request $request
+     * @param SubmitBattlePost $submitBattlePost
      * @return JsonResponse
-     * @throws InvalidArgumentException
-     * @throws Throwable
      */
-    public function postAction(Request $request)
+    public function postAction(Request $request, SubmitBattlePost $submitBattlePost)
     {
+        $player1 = $request->get('player-1');
+        $player2 = $request->get('player-2');
+
         /* Submit battle (db insert) */
-        // ...
+        /* Mark battle as complete */
+        DB::table('battles')
+            ->insert([
+                'user_a'  => $player1,
+                'user_b'  => $player2
+            ]);
 
         return response()
             ->json([

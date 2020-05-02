@@ -175,5 +175,13 @@ class BattleService
     {
         return $this->battleComplete;
     }
+
+    /**
+     * @param $battleComplete
+     */
+    public function setBattleComplete($battleComplete)
+    {
+        $this->battleComplete = $battleComplete;
+    }
 }
 

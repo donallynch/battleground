@@ -31,10 +31,6 @@
     </div>
 @endsection
 
-@section('footer-nav')
-    @parent
-@endsection
-
 @section('js')
     @parent()
 @endsection

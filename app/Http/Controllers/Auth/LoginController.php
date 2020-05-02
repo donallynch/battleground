@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Requests\LoginPost;
 use App\Models\LoginModel;
 use App\Models\UsersModel;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
-use Psr\SimpleCache\InvalidArgumentException;
-use Throwable;
 
 /**
  * Class LoginController
@@ -31,8 +28,6 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
-
     /** @var UsersModel $usersModel */
     private $usersModel;
 
@@ -44,7 +39,6 @@ class LoginController extends Controller
      * @param UsersModel $usersModel
      * @param LoginModel $loginModel
      * @param Request $request
-     * @throws InvalidArgumentException
      */
     public function __construct(
         UsersModel $usersModel,
@@ -56,60 +50,50 @@ class LoginController extends Controller
     }
 
     /**
-     * Handle an authentication attempt.
-     *
-     * @param Request $request
-     * @return bool
-     */
-    public function authenticate(Request $request)
-    {
-        return true;
-    }
-
-    /**
      * @return Factory|View
      */
     public function indexAction()
     {
-        return view('auth.login');
+        return view('login');
     }
 
     /**
+     * Very Basic Auth System
+     *  TODO:: Replace with email & password verification
      * @param Request $request
+     * @param LoginPost $loginPost
      * @return JsonResponse
-     * @throws InvalidArgumentException
-     * @throws Throwable
      */
-    public function postAction(Request $request)
+    public function postAction(Request $request, LoginPost $loginPost)
     {
-        /* Perform login in Model */
-        $response = $this->loginModel->login($request);
+        /* Get vars from request */
+        $name = $request->post('name');
 
-        /* Ensure Model was successful */
-        if ($response->getStatus() !== 200) {
-            return response()->json($response->getArray());
+        /* Retrieve User entity (by name) */
+        $user = DB::table('users')
+            ->where('name', '=', $name)
+            ->get();
+
+        /* Ensure User exists */
+        if (!count($user->toArray())) {
+            return new JsonResponse([
+                'status' => __('messages.login-failed'),
+                'errors' => ['name' => 'User not found']
+            ], 400);
         }
 
-        /* Laravel authenticate User */
-        $this->authenticate($request);
-
-        /* Retrieve UserEntity from Model response */
-        $userId = $response->getPayload()['user-id'];
+        $userObject = [
+            'id' => $user[0]->id,
+            'name' => $user[0]->name
+        ];
 
         /* Put User into session (User ID ONLY) */
-        if (!$request->session()->has('user')) {
-            session([$this->sessionUserKey => ['id' => $userId]]);
-        }
+        session(['user' => $userObject]);
 
-        return response()
-            ->json([
-                'status' => $response->getStatus(),
-                'code' => $response->getCode(),
-                'payload' => [
-                    'username' => $response->getPayload()['username']
-                ]
-            ])
-            ->cookie('c_user', $userId, 31536000);
+        return new JsonResponse([
+            'status' => __('messages.login-success', ['name' => $user[0]->name]),
+            'user' => $userObject
+        ], 200);
     }
 }
 

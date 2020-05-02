@@ -12,7 +12,7 @@
                 {{-- IF NO BATTLE LOG ENTRIES --}}
                 @if(!count($battleLog))
                     <li>
-                        <h5>{!! __('messages.No battles pending') !!}</h5>
+                        <h5>{!! __('messages.no-battles-pending') !!}</h5>
                     </li>
                 @else
                     {{-- FOREACH BATTLE LOG ENTRY --}}
@@ -44,10 +44,6 @@
             </ul>
         </div>
     </div>
-@endsection
-
-@section('footer-nav')
-    @parent
 @endsection
 
 @section('js')

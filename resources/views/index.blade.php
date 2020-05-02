@@ -12,24 +12,32 @@
                 <p class="lead">{!! __('messages.pick-your-battle') !!}</p>
                 <hr class="my-4">
                 <p>{!! __('messages.fight-to-the-death') !!}</p>
-                <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+                <a class="btn btn-primary btn-lg learn-more" href="#" role="button">
+                    {!! __('messages.learn-more') !!}
+                </a>
             </div>
             <ul class="list-group">
+                <li class="list-group-item">
+                    <a href="{!! route('login') !!}">{!! __('messages.login') !!}</a>
+                </li>
                 <li class="list-group-item">
                     <a href="{!! route('leaderboard') !!}">{!! __('messages.leaderboard') !!}</a>
                 </li>
                 <li class="list-group-item">
                     <a href="{!! route('battles') !!}">{!! __('messages.process-battle-queue') !!}</a>
                 </li>
+                <li class="list-group-item">
+                    <a href="{!! route('create-player') !!}">{!! __('messages.create-player') !!}</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{!! route('submit-battle') !!}">{!! __('messages.submit-battle') !!}</a>
+                </li>
             </ul>
         </div>
     </div>
 @endsection
 
-@section('footer-nav')
-    @parent
-@endsection
-
 @section('js')
     @parent()
+    <script src="{{ asset('/js/index.js') }}"></script>
 @endsection

@@ -48,44 +48,27 @@ class LeaderboardController extends Controller
     ) {
         parent::__construct($request, $usersModel);
         $this->loginModel = $loginModel;
+
+        /* Secure route */
+        $session = $request->session()->get('user');
+        if ($session === null) {
+            $this->show404();
+        }
     }
 
     /**
      * @return Factory|View
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         /* Retrieve all users from DB */
-        $users = DB::table('users')->get();
+        $users = DB::table('users')
+            ->orderBy('gold', 'DESC')
+            ->get();
 
         return view('leaderboard', [
             'users' => $users
         ]);
-    }
-
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     * @throws InvalidArgumentException
-     * @throws Throwable
-     */
-    public function postAction(Request $request)
-    {
-
-
-        return response()
-            ->json([
-                'status' => 'Leaderboard',
-                'payload' => [
-                    'player-a' => 'Player A name & score',
-                    'player-b' => 'Player B name & score',
-                    'player-c' => 'Player C name & score',
-                    'player-d' => 'Player D name & score',
-                    'player-e' => 'Player E name & score',
-                    'player-f' => 'Player F name & score',
-                    'player-g' => 'Player G name & score',
-                ]
-            ]);
     }
 }
 

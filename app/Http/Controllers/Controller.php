@@ -28,5 +28,13 @@ class Controller extends BaseController
     ) {
         $this->usersModel = $usersModel;
     }
+
+    /**
+     * Exit application with 404 page
+     */
+    public function show404()
+    {
+        abort(404);
+    }
 }
 

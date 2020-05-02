@@ -55,10 +55,16 @@ class BattlesController extends Controller
         parent::__construct($request, $usersModel);
         $this->loginModel = $loginModel;
         $this->battleService = $battleService;
+
+        /* Secure route */
+        $session = $request->session()->get('user');
+        if ($session === null) {
+            $this->show404();
+        }
     }
 
     /**
-     * @return Factory|View
+     * @return View
      */
     public function indexAction()
     {
@@ -70,7 +76,8 @@ class BattlesController extends Controller
         $battleLog = [];
         foreach ($battles as $battle) {
             /* Simulate battle */
-            $battleLog = $this->battleService->fightSimulator($battle);
+            $this->battleService->setBattleComplete(false);
+            $battleLog = array_merge($battleLog, $this->battleService->fightSimulator($battle));
         }
 
         return view('battles', [

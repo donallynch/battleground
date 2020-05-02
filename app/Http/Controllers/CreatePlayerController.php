@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreatePlayerPost;
 use App\Models\LoginModel;
 use App\Models\UsersModel;
 use App\Http\Controllers\Controller;
@@ -9,6 +10,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Psr\SimpleCache\InvalidArgumentException;
 use Throwable;
@@ -47,6 +49,12 @@ class CreatePlayerController extends Controller
     ) {
         parent::__construct($request, $usersModel);
         $this->loginModel = $loginModel;
+
+        /* Secure route */
+        $session = $request->session()->get('user');
+        if ($session === null) {
+            $this->show404();
+        }
     }
 
     /**
@@ -58,22 +66,37 @@ class CreatePlayerController extends Controller
     }
 
     /**
+     * Create Player
      * @param Request $request
+     * @param CreatePlayerPost $createPlayerRequest
      * @return JsonResponse
-     * @throws InvalidArgumentException
-     * @throws Throwable
      */
-    public function postAction(Request $request)
-    {
+    public function postAction(
+        Request $request,
+        CreatePlayerPost $createPlayerRequest
+    ) {
+        /* Retrieve params from request */
+        $name = $request->get('name');
+        $gold = $request->get('gold');
+        $strength = $request->get('strength');
+        $health = $request->get('health');
+        $luck = $request->get('luck');
+
+        $playerData = [
+            'name' => $name,
+            'gold' => $gold,
+            'attack_value' => $strength,
+            'hit_points' => $health,
+            'luck_value' => $luck
+        ];
+
         /* Create player (db insert) */
-        // ...
+        DB::table('users')->insert($playerData);
 
         return response()
             ->json([
                 'status' => 'Player created',
-                'payload' => [
-                    'name' => 'supplied name'
-                ]
+                'payload' => $playerData
             ]);
     }
 }

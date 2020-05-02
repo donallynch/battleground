@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Entities\Responder;
 use App\Repos\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Jenssegers\Agent\Agent;
 use Throwable;
 use Psr\SimpleCache\InvalidArgumentException;
@@ -21,26 +22,6 @@ class LoginModel
 
     /** @var UsersModel $usersModel */
     private $usersModel;
-
-    /** @var Responder $responder */
-    private $responder;
-
-    /** @var Agent $agent */
-    private $agent;
-
-    /** @var array $languages */
-    protected $availableLanguages;
-
-    /** @var string $sessionLocaleKey */
-    protected $sessionLocaleKey;
-
-    /** @var string $sessionAdvertProfileKey */
-    protected $sessionAdvertProfileKey;
-
-    const SUCCESSFUL_LOGIN = 1;
-    const PREVENTED_LOGIN = 2;
-    const USERNAME = 'username';
-    const EMAIL = 'email';
 
     /**
      * LoginModel constructor.
@@ -71,21 +52,18 @@ class LoginModel
     {
         /* Get vars from request */
         $name = $request->post('name');
-        $password = $request->post('password');
 
         /**
-         * Retrieve User entity (by email or username)
+         * Retrieve User entity (by name)
          */
-        $userEntity = $this->usersModel->getUser([
-            'name' => $name
-        ]);
+        $user = DB::table('users')->where('name', '=', $name)->get();
+        
+        echo'<pre>';
+        var_dump($user);
+        echo'</pre>';
+        die('DIED AFTER CODE DEBUG');
 
         /* Ensure supplied password matches the bcrypted password in database */
-//        if (Hash::check($password, $userEntity[0]->password) === false) {
-//            return $this->responder->set(400, __('messages.login.incorrect-password'), [
-//                'password' => __('messages.login.incorrect-password')
-//            ]);
-//        }
 
         return $this->responder->set(200, __('messages.login.ok'), [], [
             'user-id' => $userEntity[0]->id,
