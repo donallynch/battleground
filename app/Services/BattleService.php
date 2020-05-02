@@ -55,7 +55,7 @@ class BattleService
         DB::table('battles')
             ->where('id', $battle->id)
             ->update([
-                'is_complete'  => 0
+                'is_complete'  => 1
             ]);
 
         return $battleLog;
